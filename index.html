@@ -8,15 +8,23 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">🎓 EduTech<span>Learning</span></div>
+  <div class="brand-row">
+    <button id="menuBtn" aria-label="Buka/tutup navigasi" aria-expanded="false">☰</button>
+    <div class="brand">🎓 EduTech<span>Learning</span></div>
+    <div class="font-ctl" role="group" aria-label="Ukuran huruf">
+      <button id="fontDec" aria-label="Kecilkan huruf">A−</button>
+      <button id="fontInc" aria-label="Besarkan huruf">A+</button>
+    </div>
+  </div>
   <div class="search-wrap">
-    <input id="search" type="search" placeholder="Cari konsep: misal JWT, CORS, embedding..." autocomplete="off" />
+    <input id="search" type="search" placeholder="Cari konsep: misal JWT, CORS, embedding..." autocomplete="off" aria-label="Cari konsep" />
   </div>
   <div class="progress-wrap">
     <span id="progressLabel">0 / 0 selesai</span>
-    <div class="progress-bar"><div id="progressFill"></div></div>
+    <div class="progress-bar" role="progressbar" aria-label="Progres belajar"><div id="progressFill"></div></div>
   </div>
 </header>
+<div class="overlay" id="overlay"></div>
 
 <div class="layout">
   <aside class="sidebar" id="sidebar">
@@ -51,6 +59,7 @@
     </footer>
   </main>
 </div>
+<button id="toTop" aria-label="Kembali ke atas">↑</button>
 
 <script src="app.js"></script>
 </body>

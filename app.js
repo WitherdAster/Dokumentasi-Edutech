@@ -79,11 +79,12 @@ function renderAll(){
     <div class="card-body">
       <h4>📖 Penjelasan konsep</h4><p>${esc(d.desc)}</p>
       <h4>🛠️ Cara penggunaan</h4><ul>${d.use.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>
-      <div class="code-head"><b>💻 Contoh kode asli project</b><button onclick="copyCode(${d.idx},this)">Salin</button></div>
+      <div class="code-head"><b>💻 Contoh kode asli project</b><span class="code-btns"><button onclick="wrapCode(${d.idx},this)">Bungkus</button><button onclick="copyCode(${d.idx},this)">Salin</button></span></div>
       <pre id="code-${d.idx}">${esc(d.code)}</pre>
       <h4>⚖️ Pakai vs Tidak pakai</h4>
-      <div class="compare"><div class="yes">${esc(d.yes)}</div><div class="no">${esc(d.no)}</div></div>
+      <div class="compare"><div class="yes"><b>Kalau pakai ✅</b>${esc(d.yes)}</div><div class="no"><b>Kalau tidak ❌</b>${esc(d.no)}</div></div>
       <button class="mark-done ${done.has(d.idx)?"undone":""}" onclick="markDone(${d.idx})">${done.has(d.idx)?"Tandai belum selesai":"Tandai selesai ✓"}</button>
+      <div class="card-nav"><button onclick="goCard(${d.idx},-1)">‹ Sebelumnya</button><button onclick="goCard(${d.idx},1)">Berikutnya ›</button></div>
     </div>
   </article>`).join("");
   const pct = DATA.length? Math.round(done.size/DATA.length*100):0;
@@ -102,10 +103,51 @@ window.markDone = (e,i)=>{
   renderAll();
 };
 window.copyCode = (i,btn)=>{
-  navigator.clipboard.writeText(DATA[i].code).then(()=>{btn.textContent="Disalin ✓";setTimeout(()=>btn.textContent="Salin",1500);});
+  const txt = DATA[i].code;
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>{btn.textContent="Disalin ✓";setTimeout(()=>btn.textContent="Salin",1500);});
+  else { const t=document.createElement("textarea");t.value=txt;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove(); }
+};
+window.wrapCode = (i,btn)=>{
+  const pre = document.getElementById("code-"+i);
+  pre.classList.toggle("wrap");
+  btn.textContent = pre.classList.contains("wrap") ? "Geser" : "Bungkus";
+};
+window.goCard = (i,dir)=>{
+  const list = filtered().map(d=>d.idx).sort((a,b)=>a-b);
+  const pos = list.indexOf(i) + dir;
+  if(pos<0||pos>=list.length) return;
+  const target = document.getElementById("c"+list[pos]);
+  if(target){ target.classList.add("open"); target.scrollIntoView({behavior:"smooth",block:"start"}); }
 };
 document.getElementById("search").addEventListener("input",e=>{query=e.target.value;renderAll();});
 document.getElementById("expandAll").onclick=()=>document.querySelectorAll(".card").forEach(c=>c.classList.add("open"));
 document.getElementById("collapseAll").onclick=()=>document.querySelectorAll(".card").forEach(c=>c.classList.remove("open"));
 document.getElementById("resetProgress").onclick=()=>{done.clear();localStorage.removeItem("edutech-done");renderAll();};
+// Drawer HP
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const menuBtn = document.getElementById("menuBtn");
+function setDrawer(open){
+  sidebar.classList.toggle("open", open);
+  overlay.classList.toggle("show", open);
+  menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+}
+menuBtn.onclick = ()=> setDrawer(!sidebar.classList.contains("open"));
+overlay.onclick = ()=> setDrawer(false);
+document.getElementById("conceptNav").addEventListener("click", e=>{
+  if(e.target.closest("a") && window.innerWidth < 900) setDrawer(false);
+});
+document.getElementById("catNav").addEventListener("click", e=>{
+  if(e.target.closest("button") && window.innerWidth < 900) setDrawer(false);
+});
+// Ukuran huruf A- / A+ (disimpan)
+let fontScale = parseFloat(localStorage.getItem("edutech-font") || "1");
+function applyFont(){ document.documentElement.style.setProperty("--fs", (16*fontScale)+"px"); }
+document.getElementById("fontInc").onclick = ()=>{ fontScale=Math.min(1.3,fontScale+0.1); localStorage.setItem("edutech-font",fontScale); applyFont(); };
+document.getElementById("fontDec").onclick = ()=>{ fontScale=Math.max(0.85,fontScale-0.1); localStorage.setItem("edutech-font",fontScale); applyFont(); };
+applyFont();
+// Tombol ke atas
+const toTop = document.getElementById("toTop");
+window.addEventListener("scroll", ()=> toTop.classList.toggle("show", window.scrollY > 600), {passive:true});
+toTop.onclick = ()=> window.scrollTo({top:0, behavior:"smooth"});
 renderRoadmap(); renderAll();
