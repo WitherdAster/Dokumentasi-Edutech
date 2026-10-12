@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduTech Learning — Belajar Semua Konsep Project</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">🎓 EduTech<span>Learning</span></div>
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="Cari konsep: misal JWT, CORS, embedding..." autocomplete="off" />
+  </div>
+  <div class="progress-wrap">
+    <span id="progressLabel">0 / 0 selesai</span>
+    <div class="progress-bar"><div id="progressFill"></div></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <p class="side-title">Kategori</p>
+    <div id="catNav"></div>
+    <p class="side-title">Navigasi konsep</p>
+    <nav id="conceptNav"></nav>
+  </aside>
+
+  <main class="content">
+    <section class="hero">
+      <h1>Belajar Project EduTech dari Nol</h1>
+      <p>Ringkasan interaktif dari <b>Backend FastAPI + Frontend React + Android Kotlin</b>.
+      Tiap kartu berisi: <b>penjelasan → cara pakai → contoh kode asli → perbandingan pakai vs tidak pakai</b>.</p>
+      <div class="hero-actions">
+        <button id="expandAll">Buka semua</button>
+        <button id="collapseAll" class="ghost">Tutup semua</button>
+        <button id="resetProgress" class="ghost">Reset progres</button>
+      </div>
+      <div class="flow-box">
+        <b>Alur besar:</b>
+        <code>[Android / Web] → [FastAPI] → [MySQL]</code>
+        <span>Android pakai <code>X-API-Key</code> • Web pakai <code>JWT Bearer</code></span>
+      </div>
+    </section>
+
+    <section id="roadmap" class="roadmap"></section>
+    <section id="concepts"></section>
+
+    <footer>
+      <p>Data dari: <code>D:\Documents\EduTech</code> (web+backend) & <code>D:\Android Studio\EduTech</code> (android) • Dibuat untuk belajar mandiri • Deploy ke Vercel sebagai static site.</p>
+    </footer>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
